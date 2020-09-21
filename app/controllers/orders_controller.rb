@@ -3,7 +3,7 @@ class OrdersController < ApplicationController
   
   def index
     @q = Order.includes(:status).ransack params[:q]
-    @pagy, @orders = pagy(@q.result, items: 3)
+    @pagy, @orders = pagy(@q.result, items: 10)
   end
   
   def show; end
@@ -15,8 +15,7 @@ class OrdersController < ApplicationController
   def edit; end
   
   def create
-    @order = Order.new(order_params.merge(status_id: 1,
-                       control_number: DateTime.now.strftime("%Y%m%d%H%M%S%L")))
+    @order = Order.new(order_params)
     
     if @order.save
       redirect_to @order, notice: 'Order was successfully created.'
