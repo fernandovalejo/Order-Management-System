@@ -3,7 +3,14 @@ class Order < ApplicationRecord
   
   validates :description, :control_number, presence: true  
   validate :status_validate, on: :update
-  
+
+  after_initialize :init_config, if: :new_record?
+
+  def init_config
+    self.status_id ||= 1
+    self.control_number ||= DateTime.now.strftime("%Y%m%d%H%M%S%6N")
+  end
+
   def status_validate
     old = Order.find(id)
     
@@ -23,5 +30,5 @@ class Order < ApplicationRecord
   
   def description=(description)
     super description.upcase if description
-  end
+  end  
 end
